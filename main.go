@@ -1,14 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
+
+func lenAndUpper(name string) (int, string) {
+	return len(name), strings.ToUpper(name)
+}
+
+func repeatMe(words ...string) {
+	fmt.Println(words)
+}
 
 func main() {
-	const name string = "ohwoo"
-	var name2 string = "hyojung"
-	fmt.Println(name)
-	fmt.Println(name2)
-	name2 = "mimi"
-	fmt.Println(name2)
-	name3 := "yooa"
-	fmt.Println(name3)
+	totalLength, upperName := lenAndUpper("ohwoo")
+	fmt.Println(totalLength, upperName)
+	repeatMe("hyojung", "mimi", "yooa", "seunghee", "jiho", "yubin", "arin")
 }
