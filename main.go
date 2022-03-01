@@ -2,18 +2,14 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/ohwoo-kwon/learn-go/accounts"
 )
 
 func main() {
-	account := accounts.NewAccount("nico")
+	account := accounts.NewAccount("ohwoo")
 	account.Deposit(1000)
-	fmt.Println(account.Balance())
-	err := account.Withdraw(100)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	fmt.Println(account.Balance())
+	account.ChangeOwner("junsang")
+	fmt.Println(account)
+	fmt.Println(account.Balance(), account.Onwer())
 }

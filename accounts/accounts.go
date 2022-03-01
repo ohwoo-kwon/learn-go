@@ -1,12 +1,17 @@
 package accounts
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // Acount struct
 type Account struct {
 	owner string
 	balance int
 }
+
+var errNoMoney = errors.New("can't withdraw")
 
 // NewAccount creates Account
 func NewAccount (owner string) *Account {
@@ -28,8 +33,21 @@ func (a Account) Balance() int {
 // Withdraw x amount from your account
 func (a *Account) Withdraw(amount int) error {
 	if a.balance < amount {
-		return errors.New("can't withdraw")
+		return errNoMoney
 	}
 	a.balance -= amount
 	return nil
+}
+
+// ChangeOwner of the account
+func (a *Account) ChangeOwner(newOwner string) {
+	a.owner = newOwner
+}
+
+func (a Account) Onwer() string {
+	return a.owner
+}
+
+func (a Account) String() string {
+	return fmt.Sprint(a.Onwer(), "'s account.\nHas: ", a.Balance())
 }
