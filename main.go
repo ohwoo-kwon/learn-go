@@ -3,13 +3,16 @@ package main
 import (
 	"fmt"
 
-	"github.com/ohwoo-kwon/learn-go/accounts"
+	"github.com/ohwoo-kwon/learn-go/mydict"
 )
 
 func main() {
-	account := accounts.NewAccount("ohwoo")
-	account.Deposit(1000)
-	account.ChangeOwner("junsang")
-	fmt.Println(account)
-	fmt.Println(account.Balance(), account.Onwer())
+	dictionary := mydict.Dictionary{"hyojung":"leader"}
+	definition, err := dictionary.Serach("hyojung")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(definition)
+	}
+	fmt.Println(dictionary)
 }
