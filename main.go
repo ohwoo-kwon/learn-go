@@ -8,11 +8,16 @@ import (
 
 func main() {
 	dictionary := mydict.Dictionary{"hyojung":"leader"}
-	definition, err := dictionary.Serach("hyojung")
+	word := "mimi"
+	definition := "rapper"
+	err := dictionary.Add(word, definition)
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		fmt.Println(definition)
 	}
-	fmt.Println(dictionary)
+	mimi, _ := dictionary.Search(word)
+	fmt.Println("found", word, "definition:", mimi)
+	newErr := dictionary.Add(word, definition)
+	if newErr != nil {
+		fmt.Println(newErr)
+	}
 }
