@@ -6,18 +6,17 @@ import (
 )
 
 func main() {
-	c := make(chan bool)
-	people := [2]string{"yooa", "seunghee"}
+	c := make(chan string)
+	people := [7]string{"hyojung", "mimi", "yooa", "seunghee", "jiho", "yubin", "arin"}
 	for _, person := range people {
 		go isOMG(person, c)
 	}
-	result := <- c
-	fmt.Println(result)
-	fmt.Println(<- c)
+	for i:=0;i<len(people);i++{
+		fmt.Println(<-c)
+	}
 }
 
-func isOMG(person string, c chan bool) {
+func isOMG(person string, c chan string) {
 	time.Sleep(time.Second * 3)
-	fmt.Println(person)
-	c <- true
+	c <- "Hello, " + person
 }
