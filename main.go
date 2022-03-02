@@ -44,13 +44,13 @@ func writeJobs(jobs []extractedJob) {
 
 	defer w.Flush()
 
-	headers := []string{"ID", "Title", "Location", "Salary", "Sumaary"}
+	headers := []string{"Link", "Title", "Location", "Salary", "Sumaary"}
 
 	wErr := w.Write(headers)
 	checkErr(wErr)
 
 	for _, job := range jobs {
-		jobSlice := []string{job.id, job.title, job.location, job.salary, job.summary}
+		jobSlice := []string{"https://kr.indeed.com/viewjob?jk=" + job.id, job.title, job.location, job.salary, job.summary}
 		jwErr := w.Write(jobSlice)
 		checkErr(jwErr)
 	}
@@ -58,6 +58,7 @@ func writeJobs(jobs []extractedJob) {
 
 func getPage(page int) []extractedJob {
 	var jobs []extractedJob
+	c := make(chan extractedJob)
 	pageURL := baseURL + "&start=" + strconv.Itoa(page*50)
 	res, err := http.Get(pageURL)
 	checkErr(err)
@@ -71,19 +72,23 @@ func getPage(page int) []extractedJob {
 	searchCards := doc.Find(".tapItem")
 
 	searchCards.Each(func(i int, card *goquery.Selection) {
-		job := extractJob(card)
-		jobs = append(jobs, job)
+		go extractJob(card, c)
 	})
+	
+	for i := 0; i < searchCards.Length(); i ++ {
+		job := <-c
+		jobs = append(jobs, job)
+	}
 	return jobs
 }
 
-func extractJob(card *goquery.Selection) extractedJob {
+func extractJob(card *goquery.Selection, c chan<- extractedJob) {
 	id, _ := card.Attr("data-jk")
 	title := cleanString(card.Find("h2 > span").Text())
 	location := cleanString(card.Find(".companyLocation").Text())
 	salary := cleanString(card.Find(".salary-snippet > span").Text())
 	summary :=  cleanString(card.Find(".job-snippet").Text())
-	return extractedJob{
+	c <- extractedJob{
 		id: id,
 		title: title,
 		location: location,
